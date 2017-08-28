@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Eko Github</string>
+    <!-- Content description for ImageView -->
+    <string name="test_image">test image</string>
+    <!-- Error text for no internet connection -->
+    <string name="no_internet_connection">No internet connection.</string>
+    <!-- Label name for Main Activity -->
+    <string name="dev_list">Github Users</string>
+    <!-- Label name for Detail Activity -->
+    <string name="detail_view">Profile</string>
+    <!-- String to be displayed on the Details Activity -->
+    <string name="user_detail">User Details</string>
+    <!--String for share button-->
+    <string name="share">Share</string>
+
+</resources>
