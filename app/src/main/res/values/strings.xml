@@ -12,5 +12,9 @@
     <string name="user_detail">User Details</string>
     <!--String for share button-->
     <string name="share">Share</string>
+    <!-- String for refresh button -->
+    <string name="refresh">Refresh</string>
+    <!-- String to display when data is null -->
+    <string name="no_data">Failed to load data</string>
 
 </resources>

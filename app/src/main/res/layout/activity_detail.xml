@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     tools:context="com.example.android.sampleapi.DetailActivity">
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/ll_profile_image"
         android:layout_width="150dp"
         android:layout_height="150dp"
@@ -22,18 +22,19 @@
         <ProgressBar
             android:id="@+id/loading_indicator"
             android:layout_width="match_parent"
+            style="@style/Base.Widget.AppCompat.ProgressBar"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:visibility="gone"/>
+            android:visibility="invisible"/>
 
         <ImageView
             android:id="@+id/error_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/ic_no_connection"
-            android:visibility="gone"
+            android:visibility="invisible"
             android:contentDescription="@string/test_image"/>
-    </LinearLayout>
+    </FrameLayout>
 
     <TextView
         android:id="@+id/username"

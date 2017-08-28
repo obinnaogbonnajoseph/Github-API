@@ -83,9 +83,9 @@ public class DetailActivity extends AppCompatActivity implements
             getSupportLoaderManager().initLoader(IMAGE_LOADER_ID, null, DetailActivity.this);
         } else {
             // First hide loading indicator, so error image will be visible
-            mLoadingIndicator.setVisibility(View.GONE);
+            mLoadingIndicator.setVisibility(View.INVISIBLE);
             // Show the error image
-            showErrorMessage();
+            showErrorImage();
         }
         // Set the view with its value.
         mUserName.setText(userName);
@@ -161,12 +161,12 @@ public class DetailActivity extends AppCompatActivity implements
     */
     @Override
     public void onLoadFinished(Loader<Bitmap> loader, Bitmap data) {
-        mLoadingIndicator.setVisibility(View.GONE);
+        mLoadingIndicator.setVisibility(View.INVISIBLE);
         mImageView.setImageBitmap(data);
         if (data == null) {
-            showErrorMessage();
+            showErrorImage();
         } else {
-            showDataView();
+            showImage();
         }
     }
 
@@ -186,9 +186,9 @@ public class DetailActivity extends AppCompatActivity implements
     * This method will make the Image for the user profile visible and
     * hide the error image.
     */
-    private void showDataView() {
+    private void showImage() {
         /* First, make sure the error image is invisible. */
-        mErrorView.setVisibility(View.GONE);
+        mErrorView.setVisibility(View.INVISIBLE);
         /* Then, show the profile image */
         mImageView.setVisibility(View.VISIBLE);
     }
@@ -196,7 +196,7 @@ public class DetailActivity extends AppCompatActivity implements
     /*
     * This method will make the error image visible and hide the profile image
     */
-    private void showErrorMessage() {
+    private void showErrorImage() {
         /* First, hide the currently visible profile image */
         mImageView.setVisibility(View.GONE);
         /* Then, show the error image */

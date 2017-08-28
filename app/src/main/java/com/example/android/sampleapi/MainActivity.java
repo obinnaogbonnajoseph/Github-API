@@ -62,13 +62,33 @@ public class MainActivity extends AppCompatActivity implements
          * hidden when no data is loading.
          */
         mLoadingIndicator = (ProgressBar) findViewById(R.id.loading_indicator);
-        /*
+        // Check network connectivity and take an action if positive or negative.
+        if (checkNetworkConnectivity()) {
+            /*
          * From MainActivity, we have implemented the LoaderCallbacks interface with the type of
          * Developer Object. (implements LoaderCallbacks<ArrayList<Developer>>) The variable callback is passed
          * to the call to initLoader below. This means that whenever the loaderManager has
          * something to notify us of, it will do so through this callback.
          */
-        LoaderCallbacks<ArrayList<Developer>> callback = MainActivity.this;
+            LoaderCallbacks<ArrayList<Developer>> callback = MainActivity.this;
+            /*
+         * Ensures a loader is initialized and active. If the loader doesn't already exist, one is
+         * created and (if the activity/fragment is currently started) starts the loader. Otherwise
+         * the last created loader is re-used.
+         */
+            getSupportLoaderManager().initLoader(DEVELOPER_LOADER_ID, null, callback);
+        } else {
+            // Otherwise, display error
+            // First, hide loading indicator so error message will be visible
+            mLoadingIndicator.setVisibility(View.GONE);
+            // Update errorMessageView with no connection error message
+            mErrorMessageDisplay.setText(R.string.no_internet_connection);
+            // Show the errorMessageView
+            showErrorMessage();
+        }
+    }
+
+    private Boolean checkNetworkConnectivity() {
         // Get a reference to the ConnectivityManager to check state of network connectivity
         ConnectivityManager connMgr = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -76,24 +96,8 @@ public class MainActivity extends AppCompatActivity implements
         // Get details on the currently active default data network
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
-        // If there is a network connection, fetch data
-        if (networkInfo != null && networkInfo.isConnected()) {
-            /*
-         * Ensures a loader is initialized and active. If the loader doesn't already exist, one is
-         * created and (if the activity/fragment is currently started) starts the loader. Otherwise
-         * the last created loader is re-used.
-         */
-            getSupportLoaderManager().initLoader(DEVELOPER_LOADER_ID, null, callback);
-
-        } else {
-            // Otherwise, display error
-            // First, hide loading indicator so error message will be visible
-            mLoadingIndicator.setVisibility(View.GONE);
-            // Show the errorMessageView
-            showErrorMessage();
-            // Update errorMessageView with no connection error message
-            mErrorMessageDisplay.setText(R.string.no_internet_connection);
-        }
+        // If there is a network connection, return true, else return false
+        return networkInfo != null && networkInfo.isConnected();
     }
 
     /**
@@ -115,12 +119,21 @@ public class MainActivity extends AppCompatActivity implements
              */
             @Override
             protected void onStartLoading() {
-                if (mDeveloper != null) {
-                    deliverResult(mDeveloper);
+                // if there is network continue with loading, else show error
+                if (checkNetworkConnectivity()){
+                    // Check if there is existing data in adapter
+                    if (mDeveloper != null) {
+                        deliverResult(mDeveloper);
+                    } else {
+                        showLoadingIndicator();
+                        forceLoad();
+                    }
                 } else {
-                    mLoadingIndicator.setVisibility(View.VISIBLE);
-                    forceLoad();
+                    // Display error message
+                    mErrorMessageDisplay.setText(R.string.no_internet_connection);
+                    showErrorMessage();
                 }
+
             }
 
             /**
@@ -167,6 +180,7 @@ public class MainActivity extends AppCompatActivity implements
         mLoadingIndicator.setVisibility(View.INVISIBLE);
         mAdapter.setData(data);
         if (data == null) {
+            mErrorMessageDisplay.setText(R.string.no_data);
             showErrorMessage();
         } else {
             showDataView();
@@ -220,5 +234,42 @@ public class MainActivity extends AppCompatActivity implements
         mDevelopersList.setVisibility(View.INVISIBLE);
         /* Then, show the error */
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
+    }
+
+    /*
+     * This method will display only the loading indicator
+     */
+    private void showLoadingIndicator() {
+        mLoadingIndicator.setVisibility(View.VISIBLE);
+        mDevelopersList.setVisibility(View.INVISIBLE);
+        mErrorMessageDisplay.setVisibility(View.INVISIBLE);
+    }
+
+    /*
+    *   This method will restart the loader
+     */
+    private void restartLoader() {
+        // Restart the loader
+        getSupportLoaderManager().restartLoader(DEVELOPER_LOADER_ID,null,MainActivity.this);
+    }
+
+    /*
+    *   These methods set up a menu button called Refresh
+     */
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.refresh, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.refresh) {
+            restartLoader();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

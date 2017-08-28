@@ -48,8 +48,12 @@ class NetworkUtil {
         builtUri.append(ACCESS_TOKEN+"=");
         builtUri.append(access_token+"&");
         builtUri.append(PARAM_QUERY+"=");
-        String param = "location:lagos+sort:repos+language:java";
-        builtUri.append(param);
+        String param1 = "location:lagos+sort:";
+        String param2 = setParam2("joined");
+        String param3 = "+language:java";
+        builtUri.append(param1);
+        builtUri.append(param2);
+        builtUri.append(param3);
 		URL url = null;
 		try {
 			url = new URL(builtUri.toString());
@@ -60,8 +64,12 @@ class NetworkUtil {
 		return url;
 	}
 
+    private static String setParam2(String option) {
+        return option;
+    }
 
-	/**
+
+    /**
 	* This method returns the entire result from the HTTP response.
 	*
 	* @param url The URL to fetch the HTTP response from.
