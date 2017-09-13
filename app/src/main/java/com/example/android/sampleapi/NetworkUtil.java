@@ -50,7 +50,7 @@ class NetworkUtil {
         builtUri.append(PARAM_QUERY+"=");
         String param1 = "location:lagos+sort:";
         String param2 = setParam2("joined");
-        String param3 = "+language:java";
+        String param3 = "+language:java&per_page=300";
         builtUri.append(param1);
         builtUri.append(param2);
         builtUri.append(param3);
